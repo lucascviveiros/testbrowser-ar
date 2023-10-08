@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale 1.0">
+    </head>
+    <script src="js/aframe-master.min.js"></script>
+    <script src="js/aframe-ar-nft.js"></script>
+    
+    <body style='margin : 0px; overflow: hidden;'>
+        <!-- we add detectionMode and matrixCodeType to tell AR.js to recognize barcode markers -->
+        <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;'>
+          <a-assets>
+            <a-asset-item id="animated-asset" src="Coffe/Coffe.glb"></a-asset-item>
+        </a-assets>
+        
+        <!-- Lighting -->
+        <a-light type="ambient" color="#bbb"></a-light>
+        <a-light type="point" color="#fff" intensity="2" position="0 10 5"></a-light>
+        
+        <a-marker type='barcode' value='6'>
+            <a-entity
+                gltf-model="#animated-asset"
+                scale="8 8 8">
+            </a-entity>
+        </a-marker>
+
+        <!-- Marker with custom pattern (like a QR code) -->
+        <a-marker preset="custom" type="pattern" url="NFT/pattern-trex-image.patt">
+          <a-entity
+              gltf-model="#animated-asset"
+              scale="5 5 5"
+              position="0 0 0">
+          </a-entity>
+        </a-marker>
+
+        <a-entity camera></a-entity>
+        </a-scene>
+
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+              // Madrid coordinates boundaries (approximate, you may adjust these)
+            
+            //  const MADRID_BOUNDS = {
+             //     lat: [40.0, 41.0],
+             //     lon: [-4.0, -3.0]
+             // };
+
+            const MADRID_BOUNDS = { //SP
+              lat: [-24.0, -23.0],
+              lon: [-47.0, -46.0]
+            };
+      
+              // Check if Geolocation API is supported
+              if ("geolocation" in navigator) {
+                  navigator.geolocation.getCurrentPosition(function(position) {
+                      const { latitude, longitude } = position.coords;
+      
+                      // Check if user is in Madrid
+                      if (
+                          latitude >= MADRID_BOUNDS.lat[0] && latitude <= MADRID_BOUNDS.lat[1] &&
+                          longitude >= MADRID_BOUNDS.lon[0] && longitude <= MADRID_BOUNDS.lon[1]
+                      ) {
+                          // Activate AR Experience
+                          // You might manipulate the DOM to display the AR scene here.
+                          alert("This AR experience is in SP right now!!");
+
+                      } else {
+                          alert("This AR experience is only available in Madrid.");
+                          // Optionally, redirect them or display a custom message/page.
+                      }
+                  }, function(error) {
+                      // Handle error (e.g., user denied location access)
+                      alert("Location access is required for this AR experience.");
+                  });
+              } else {
+                  alert("Geolocation is not supported by your browser.");
+              }
+          });
+      </script>
+    </body>
+</html>
